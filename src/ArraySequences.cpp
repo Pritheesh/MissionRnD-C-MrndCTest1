@@ -33,5 +33,98 @@ Difficulty : Medium
 
 int * find_sequences(int *arr, int len){
 	//Return final array which has 6indexes [AP1_S,AP1_E,AP2_S,AP2_E,GP1_S,GP2_E]
-	return NULL;
+	if (arr == NULL || len < 1)
+		return NULL;
+	int * seq = (int *)malloc(sizeof(int) * 6);
+	int count = 1, diff = arr[1] - arr[0], diff1;
+	seq[0] = 0;
+	for (int i = 1; i < len - 1; i++)
+	{
+		diff1 = arr[i + 1] - arr[i];
+		if (diff1 != diff)
+		{
+			if (count >= 2)
+			{
+				seq[1] = i;
+				break;
+			}
+			else
+			{
+				seq[0] = i;
+				count = 1;
+				diff = diff1;
+			}
+		}
+		else
+			count++;
+	}
+	int index = seq[0] + 1;
+	seq[2] = index;
+	count = 1;
+	diff = arr[index + 1] - arr[index];
+	for (int i = index + 1; i < len - 1; i++)
+	{
+		diff1 = arr[i + 1] - arr[i];
+		if (diff1 == diff)
+		{
+			count++;
+			if (i == len - 2)
+				seq[3] = i + 1;
+		}
+		else
+		{
+
+			if (count >= 2)
+			{
+				seq[3] = i;
+				if (seq[3] == seq[1])
+				{
+					seq[2] = seq[3];
+					diff = diff1;
+					count = 1;
+					continue;
+				}
+				break;
+			}
+			else
+			{
+				seq[2] = i;
+				count = 1;
+				diff = diff1;
+			}
+		}
+	}
+
+	seq[4] = 0;
+	int quotient = arr[1] / arr[0];
+	count = 1;
+
+	for (int i = 1; i < len - 1; i++)
+	{
+		if (arr[i + 1] == arr[i] * quotient)
+		{
+			count++;
+			if (i == len - 2)
+				seq[5] = i + 1;
+		}
+		else
+		{
+			if (count >= 2)
+			{
+				seq[5] = i;
+				break;
+			}
+			else
+			{
+				seq[4] = i;
+				count = 1;
+				quotient = arr[i + 1] / arr[i];
+			}
+		}
+
+
+	}
+
+
+	return seq;
 }
